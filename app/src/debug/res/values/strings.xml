@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SMSGateway_debug</string>
+    <string name="accessibility_id">interactive1.com.smsgateway.debug/interactive1.com.smsgateway.service.USSDAccessibilityService</string>
+</resources>

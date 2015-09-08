@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="interactive1.com.smsgateway.MainActivity">
+<!--
+    <item
+        android:id="@+id/enterUSSD"
+        android:orderInCategory="50"
+        android:title="USSD"
+        android:icon="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha"
+        app:showAsAction="always" />
+        -->
+
+    <item
+        android:id="@+id/logout"
+        android:orderInCategory="45"
+        android:title="logout"
+        android:icon="@drawable/logout"
+        app:showAsAction="always" />
+</menu>

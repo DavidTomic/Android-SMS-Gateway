@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">SMSGateway</string>
+    <string name="title_activity_main">SMSGateway</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="accessibilityServiceDescription">When this service is enabled, SMSGateway can
+        read content inside USSD responses popup dialog and close them on your behalf</string>
+    <string name="accessibility_id">interactive1.com.smsgateway/.service.USSDAccessibilityService</string>
+
+
+    <string name="title_activity_associate">AssociateActivity</string>
+    <string name="balance">Balance</string>
+    <string name="checkUssd">Please check your ussd code is valid</string>
+    <string name="sendingActive">Sending sms messages ia active</string>
+    <string name="exitAbortSending">Do you want exit app and abort sending?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="enableServiceText">Please go to settings and enable SMSGatewayService</string>
+    <string name="enableServiceTitle">SMSGatewayService</string>
+    <string name="settings">Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="logOut">Do you want deassociate this phone?</string>
+    <string name="enter_code">Enter code</string>
+    <string name="send">Send</string>
+    <string name="sms_left">SMS amount</string>
+    <string name="please_restart_your_device">Please restart your device so this service can work</string>
+    <string name="need_restart_device">Need device restart</string>
+    <string name="free_send">Free Send</string>
+
+</resources>
