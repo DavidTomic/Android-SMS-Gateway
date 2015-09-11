@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
 
         );
 
+      //  ((TextView)findViewById(R.id.tvURL)).setText(Utility.URL_BASE);
+
     }
     @Override
     protected void onDestroy() {

@@ -15,8 +15,10 @@ public class Utility {
 
     private static final String TAG = "Utility";
 
+    //"http://jjurjevic.interactive1.hr:4567/";
+    //"http://smsgw-api.interactive1.hr:80/";
 
-    public static final String URL_BASE = "http://jjurjevic.interactive1.hr:4567/";
+    public static final String URL_BASE = "http://smsgw-api.interactive1.hr:80/";
     public static final String URL_ASSOCIATE = "phone/assoc";
     public static final String URL_MESSAGES = "messages";
     public static final String URL_PHONE = "phone";
