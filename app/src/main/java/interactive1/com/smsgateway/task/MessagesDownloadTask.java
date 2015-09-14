@@ -28,6 +28,7 @@ public class MessagesDownloadTask extends AsyncTask<Void, Void, Boolean> {
     private static final String URL = Utility.URL_BASE + Utility.URL_MESSAGES;
     private static final String TAG = "MessagesDownloadTask";
 
+    private static final int INCOMPLETE = 0;
     private static final int FREE_SEND = 1;
     private static final int SEND_AMOUNT = 2;
     private static final int SET_FUNDS = 3;
@@ -100,7 +101,7 @@ public class MessagesDownloadTask extends AsyncTask<Void, Void, Boolean> {
 
         if (result) {
 
-            if (checkUssdOrMessage){
+            if (checkUssdOrMessage) {
                 checkUssdOrMessage = false;
                 mainActivity.ussdRequested = false;
                 mainActivity.checkUssdAndMessageProcess();
@@ -114,9 +115,9 @@ public class MessagesDownloadTask extends AsyncTask<Void, Void, Boolean> {
             }
 
             if (refreshTextAndColor)
-                 mainActivity.setTextAndColor(text, color);
+                mainActivity.setTextAndColor(text, color);
 
-        }else if (responseCode == 403){
+        } else if (responseCode == 403) {
             mainActivity.logOut();
         }
 
@@ -170,46 +171,70 @@ public class MessagesDownloadTask extends AsyncTask<Void, Void, Boolean> {
             }
 
 
-            if (!jsonObject.isNull("battery_check")){
+            if (!jsonObject.isNull("battery_check")) {
                 SendFundsTask task = new SendFundsTask(Utility.
                         readStringPreferences(mainActivity, Utility.KEY_ACCOUNT_TOKEN, ""), mainActivity);
                 task.execute("", "");
             }
 
-            if (!jsonObject.isNull("plan")){
+            if (!jsonObject.isNull("plan")) {
                 JSONObject planJO = jsonObject.getJSONObject("plan");
 
-                if (planJO.getInt("type") != CHECK_BALANCE){
-                    refreshTextAndColor = true;
-                    switch (planJO.getInt("type")){
-                        case FREE_SEND:
-                            text = mainActivity.getString(R.string.free_send);
-                            break;
-                        case SEND_AMOUNT:
-                            text = mainActivity.getString(R.string.sms_left) +
-                                    ": " + planJO.getString("amount");
-                            break;
-                        case SET_FUNDS:
-                            text = mainActivity.getString(R.string.balance)
-                                    + ": " + planJO.getString("funds");
-                            break;
+                refreshTextAndColor = true;
+                switch (planJO.getInt("type")) {
+                    case INCOMPLETE:
+                        text = mainActivity.getString(R.string.please_choose_plan);
+                        break;
+                    case FREE_SEND:
+                        text = mainActivity.getString(R.string.free_send);
+                        break;
+                    case SEND_AMOUNT:
+                        text = mainActivity.getString(R.string.sms_left) +
+                                ": " + planJO.getString("amount");
+                        break;
+                    case SET_FUNDS:
+                        text = mainActivity.getString(R.string.balance)
+                                + ": " + planJO.getString("funds");
+                        break;
+                    case CHECK_BALANCE:
+                        text = Utility.readStringPreferences(mainActivity, Utility.KEY_CHECK_BALANCE_TEXT, "");
 
-                    }
-
-                    if (!planJO.isNull("color")) {
-                        switch (planJO.getString("color")) {
-                            case "green":
-                                color = R.color.green;
-                                break;
-                            case "yellow":
-                                color = R.color.yellow;
-                                break;
-                            case "red":
-                                color = R.color.red;
-                                break;
+                        try {
+                            int colorIndex = Integer.parseInt(Utility.readStringPreferences(mainActivity, Utility.KEY_CHECK_BALANCE_COLOR_INDEX, ""));
+                            switch (colorIndex) {
+                                case 0:
+                                    color = R.color.green;
+                                    break;
+                                case 1:
+                                    color = R.color.yellow;
+                                    break;
+                                case 2:
+                                    color = R.color.red;
+                                    break;
+                                default:
+                                    color = R.color.gray;
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            color = R.color.gray;
                         }
-                    }
 
+                        break;
+                }
+
+                if (!planJO.isNull("color")) {
+                    switch (planJO.getString("color")) {
+                        case "green":
+                            color = R.color.green;
+                            break;
+                        case "yellow":
+                            color = R.color.yellow;
+                            break;
+                        case "red":
+                            color = R.color.red;
+                            break;
+                    }
                 }
 
             }

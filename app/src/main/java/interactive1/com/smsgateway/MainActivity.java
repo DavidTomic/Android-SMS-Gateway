@@ -42,6 +42,7 @@ import interactive1.com.smsgateway.receiver.SmsSentReceiver;
 import interactive1.com.smsgateway.service.ExtendedNetworkService;
 import interactive1.com.smsgateway.task.MessagesDownloadTask;
 import interactive1.com.smsgateway.task.SendFundsTask;
+import interactive1.com.smsgateway.util.InternetStatus;
 import interactive1.com.smsgateway.util.Utility;
 
 
@@ -106,9 +107,10 @@ public class MainActivity extends AppCompatActivity {
 
         );
 
-      //  ((TextView)findViewById(R.id.tvURL)).setText(Utility.URL_BASE);
+        //  ((TextView)findViewById(R.id.tvURL)).setText(Utility.URL_BASE);
 
     }
+
     @Override
     protected void onDestroy() {
         Log.i(TAG, "onDestroy");
@@ -127,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onDestroy();
     }
+
     @Override
     protected void onResume() {
         // TODO Auto-generated method stub
@@ -157,8 +160,13 @@ public class MainActivity extends AppCompatActivity {
 
         invalidateOptionsMenu();
 
+        if (!InternetStatus.isOnline(this)){
+            Toast.makeText(this, getString(R.string.please_check_your_internet_connection),
+                    Toast.LENGTH_SHORT).show();
+        }
 
     }
+
     @Override
     protected void onPause() {
 
@@ -184,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onPause();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -204,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     @Override
     public void onBackPressed() {
 
@@ -233,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -248,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -299,6 +311,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
     private void sendSMS(String phoneNumber, String messageText, int messageId) {
 
         Intent i1 = new Intent(BROADCAST_SMS_SENT);
@@ -325,6 +338,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
     private void finishSendingSMS() {
 
         Log.i(TAG, "finishSendingSMS " + MessageSource.getInstance().getSuccessMessagesIdList());
@@ -368,6 +382,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = alert.create();
         alertDialog.show();
     }
+
     private void showRestartAlert() {
         if (alertVisible)
             return;
@@ -389,6 +404,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = alert.create();
         alertDialog.show();
     }
+
     private void showLogOutlert() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
@@ -463,6 +479,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     private void sendUSSDRequest() {
 
         Log.i(TAG, "sendUSSDRequest ");
@@ -485,6 +502,7 @@ public class MainActivity extends AppCompatActivity {
                 .parse("tel:" + ussdCode + Uri.encode("#")));
         startActivityForResult(i, USSD_REQUEST_CODE);
     }
+
     private BroadcastReceiver broadcastUSSDReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -507,16 +525,31 @@ public class MainActivity extends AppCompatActivity {
 
         try {
 
-            if (!json.isNull("funds"))
-                tvBalance.setText(getString(R.string.balance) + ": " + json.getString("funds"));
-            else if (!json.isNull("msg_amount"))
-                tvBalance.setText(getString(R.string.sms_left) + ": " + json.getString("msg_amount"));
-            else return;
+            String text = null;
+            int index = -1;
+
+            if (!json.isNull("funds")) {
+                text = getString(R.string.balance) + ": " + json.getString("funds");
+
+                String time = new java.text.SimpleDateFormat("dd.MM HH:mm").format
+                        (new java.util.Date(System.currentTimeMillis()));
+                text += System.getProperty("line.separator") + getString(R.string.last_check) + " " + time;
+
+                tvBalance.setText(text);
+            } else if (!json.isNull("msg_amount")) {
+                text = getString(R.string.sms_left) + ": " + json.getString("msg_amount");
+
+                String time = new java.text.SimpleDateFormat("dd.MM HH:mm").format
+                        (new java.util.Date(System.currentTimeMillis()));
+                text += System.getProperty("line.separator") + getString(R.string.last_check) + " " + time;
+
+                tvBalance.setText(text);
+            } else return;
 
 
             if (!json.isNull("color")) {
                 int[] colors = {R.color.green, R.color.yellow, R.color.red};
-                int index;
+
                 switch (json.getString("color")) {
                     case "green":
                         index = 0;
@@ -536,6 +569,11 @@ public class MainActivity extends AppCompatActivity {
                 mainLayout.setBackgroundColor(getResources().getColor(R.color.gray));
             }
 
+            if (text != null) {
+                Utility.saveStringPreferences(this, Utility.KEY_CHECK_BALANCE_TEXT, text);
+                Utility.saveStringPreferences(this, Utility.KEY_CHECK_BALANCE_COLOR_INDEX, "" + index);
+            }
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -551,6 +589,7 @@ public class MainActivity extends AppCompatActivity {
         mPollHandler.removeCallbacks(mPollRunnable);
         mPollHandler.postDelayed(mPollRunnable, 1000);
     }
+
     private Runnable mPollRunnable = new Runnable() {
 
         @Override
@@ -582,6 +621,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
+
     @SuppressLint("NewApi")
     public static boolean isAccessibilityEnabled(Context context, String id) {
 
@@ -598,6 +638,7 @@ public class MainActivity extends AppCompatActivity {
 
         return false;
     }
+
     public void logOut() {
         Utility.saveStringPreferences(MainActivity.this, Utility.KEY_USSD_CODE, "");
         Utility.saveStringPreferences(MainActivity.this, Utility.KEY_ACCOUNT_TOKEN, "");
@@ -631,7 +672,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void setTextAndColor(String text, int color){
+    public void setTextAndColor(String text, int color) {
         tvBalance.setText(text);
         mainLayout.setBackgroundColor(getResources().getColor(color));
     }

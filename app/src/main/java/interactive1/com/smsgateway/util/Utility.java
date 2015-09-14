@@ -34,6 +34,9 @@ public class Utility {
     public static final String KEY_SMS_NUMBER = "key_sms_number";
     public static final String KEY_SMS_TEXT = "key_sms_text";
 
+    public static final String KEY_CHECK_BALANCE_TEXT = "key_chech_balance_text";
+    public static final String KEY_CHECK_BALANCE_COLOR_INDEX = "key_check_balance_color_index";
+
 
     public static void saveStringPreferences(Context context, String key, String value){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());

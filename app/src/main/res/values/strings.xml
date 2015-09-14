@@ -28,5 +28,8 @@
     <string name="please_restart_your_device">Please restart your device so this service can work</string>
     <string name="need_restart_device">Need device restart</string>
     <string name="free_send">Free Send</string>
+    <string name="please_choose_plan">Please choose plan on website you want to use for sending SMS messages</string>
+    <string name="last_check">Last check:</string>
+    <string name="please_check_your_internet_connection">Please check your internet connection</string>
 
 </resources>
